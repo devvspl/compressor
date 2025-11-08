@@ -75,6 +75,7 @@ const elements = {
     progressContainer: null,
     progressBar: null,
     progressPercent: null,
+    progressStatus: null,
     downloadSection: null,
     downloadBtn: null,
     compareBtn: null,
@@ -143,6 +144,7 @@ function cacheElements() {
     elements.progressContainer = document.getElementById('progressContainer');
     elements.progressBar = document.getElementById('progressBar');
     elements.progressPercent = document.getElementById('progressPercent');
+    elements.progressStatus = document.getElementById('progressStatus');
     elements.downloadSection = document.getElementById('downloadSection');
     elements.downloadBtn = document.getElementById('downloadBtn');
     elements.compareBtn = document.getElementById('compareBtn');
@@ -644,6 +646,9 @@ async function compressPDF() {
         elements.compressBtn.disabled = true;
         elements.downloadSection.classList.add('hidden');
         
+        // Reset progress to 0
+        updateProgress(0, false);
+        
         // Simulate progress updates
         simulateProgress();
         
@@ -676,11 +681,23 @@ async function compressPDF() {
         AppState.compressedPdfBytes = pdfBytes;
         AppState.compressedSize = pdfBytes.length;
         
-        // Update progress to 100%
-        updateProgress(100);
+        // Update progress to 100% and mark as complete
+        updateProgress(100, true);
         
-        // Show download section
-        showDownloadSection();
+        // Force browser repaint to ensure 100% is visible
+        void elements.progressBar.offsetWidth;
+        
+        // Wait for progress bar animation to complete (CSS transition is 300ms)
+        // Then show download section and hide progress container
+        setTimeout(() => {
+            // Show download section
+            showDownloadSection();
+            
+            // Hide progress container after a brief delay to show completion
+            setTimeout(() => {
+                elements.progressContainer.classList.add('hidden');
+            }, 1000);
+        }, 500);
         
         // Show success toast
         showToast('PDF compressed successfully!', 'success');
@@ -690,6 +707,11 @@ async function compressPDF() {
         showError(`Compression failed: ${error.message}`);
         elements.progressContainer.classList.add('hidden');
         elements.compressBtn.disabled = false;
+        
+        // Reset progress status
+        elements.progressStatus.textContent = 'Compressing...';
+        elements.progressStatus.classList.remove('text-green-600', 'dark:text-green-400');
+        elements.progressStatus.classList.add('text-gray-700', 'dark:text-gray-300');
     }
 }
 
@@ -749,17 +771,30 @@ function simulateProgress() {
             progress = 90; // Stop at 90%, actual completion will set to 100%
             clearInterval(interval);
         }
-        updateProgress(progress);
+        updateProgress(progress, false);
     }, 200);
 }
 
 /**
  * Update progress bar
+ * @param {number} percent - Progress percentage (0-100)
+ * @param {boolean} isComplete - Whether compression is complete
  */
-function updateProgress(percent) {
+function updateProgress(percent, isComplete = false) {
     const clampedPercent = Math.min(100, Math.max(0, percent));
     elements.progressBar.style.width = `${clampedPercent}%`;
     elements.progressPercent.textContent = `${Math.round(clampedPercent)}%`;
+    
+    // Update status text
+    if (isComplete || clampedPercent >= 100) {
+        elements.progressStatus.textContent = 'Complete!';
+        elements.progressStatus.classList.remove('text-gray-700', 'dark:text-gray-300');
+        elements.progressStatus.classList.add('text-green-600', 'dark:text-green-400');
+    } else {
+        elements.progressStatus.textContent = 'Compressing...';
+        elements.progressStatus.classList.remove('text-green-600', 'dark:text-green-400');
+        elements.progressStatus.classList.add('text-gray-700', 'dark:text-gray-300');
+    }
 }
 
 /**
@@ -777,6 +812,11 @@ function showDownloadSection() {
     
     elements.downloadSection.classList.remove('hidden');
     elements.compressBtn.disabled = false;
+    
+    // Reset progress status for next use
+    elements.progressStatus.textContent = 'Compressing...';
+    elements.progressStatus.classList.remove('text-green-600', 'dark:text-green-400');
+    elements.progressStatus.classList.add('text-gray-700', 'dark:text-gray-300');
 }
 
 /**
@@ -965,6 +1005,14 @@ function resetApp() {
     elements.progressContainer.classList.add('hidden');
     elements.fileInput.value = '';
     elements.compressBtn.disabled = true;
+    
+    // Reset progress
+    updateProgress(0, false);
+    elements.progressBar.style.width = '0%';
+    elements.progressPercent.textContent = '0%';
+    elements.progressStatus.textContent = 'Compressing...';
+    elements.progressStatus.classList.remove('text-green-600', 'dark:text-green-400');
+    elements.progressStatus.classList.add('text-gray-700', 'dark:text-gray-300');
     
     // Hide error
     hideError();
