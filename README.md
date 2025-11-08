@@ -1,241 +1,107 @@
 # PDF Compressor Pro
 
-A comprehensive, full-featured web application for compressing PDF files directly in the browser. Built as a single-page application (SPA) using vanilla JavaScript (ES6+), Tailwind CSS for styling, and the pdf-lib JavaScript library for PDF manipulation and compression.
+A **comprehensive, full-featured web application** for compressing PDF files **directly in the browser**. Built as a **single-page application (SPA)** using:
+
+- **Vanilla JavaScript (ES6+)**
+- **Tailwind CSS** for styling
+- **`pdf-lib`** for PDF manipulation and compression
+
+> **100% Client-Side | No Uploads | Privacy-First**
+
+---
 
 ## Features
 
 ### Core Functionality
 
-- **File Upload**: Drag-and-drop or select PDF files (up to 50MB)
-- **PDF Preview**: Display thumbnail and file information
-- **Compression Options**:
-  - Adjustable compression levels (Low/Medium/High)
-  - Remove metadata
-  - Embed fonts (subset)
-  - Grayscale images
-  - Downsample images (150 DPI)
-  - Remove duplicate objects
-- **Real-time Size Estimation**: Preview estimated file size based on options
-- **Progress Tracking**: Visual progress bar during compression
-- **Download**: Download compressed PDF with automatic filename
-- **Size Comparison**: Modal showing before/after statistics
-- **Batch Processing**: Compress multiple PDFs at once
+| Feature | Description |
+|-------|-------------|
+| **File Upload** | Drag-and-drop or click to select (up to **50MB**) |
+| **PDF Preview** | Real-time first-page thumbnail + metadata |
+| **Compression Options** | Adjustable levels + advanced settings |
+| **Real-time Estimation** | Live preview of estimated output size |
+| **Progress Bar** | Visual feedback during compression |
+| **Download** | Auto-download with `compressed_[name].pdf` |
+| **Size Comparison** | Modal with before/after stats |
+| **Batch Mode** | Compress multiple PDFs in a queue |
 
-### UI/UX Features
+---
 
-- **Modern Design**: Clean, SaaS-inspired interface
-- **Dark/Light Theme**: Toggle between themes with persistent preference
-- **Fully Responsive**: Mobile-first design that works on all devices
-- **Accessible**: ARIA-compliant with keyboard navigation support
-- **Smooth Animations**: Subtle transitions and hover effects
+### UI/UX Highlights
 
-### Technical Features
+- **Modern SaaS Design** – Clean, professional, inspired by Smallpdf & ILovePDF  
+- **Dark / Light Mode** – Toggle with persistent preference  
+- **Fully Responsive** – Mobile-first, works on all devices  
+- **Accessible (a11y)** – ARIA labels, keyboard navigation, screen reader support  
+- **Smooth Animations** – Fade-ins, hover effects, transitions via Tailwind  
+- **Interactive Controls** – Sliders, toggles, collapsible panels
 
-- **Client-side Only**: All processing happens in the browser - no server uploads
-- **Privacy-focused**: Your files never leave your device
-- **Fast Performance**: Optimized for quick processing
-- **Error Handling**: Graceful error messages for edge cases
-- **Browser Compatibility**: Works on modern browsers (Chrome, Firefox, Safari, Edge)
+---
+
+### Technical Excellence
+
+| Feature | Details |
+|-------|--------|
+| **Zero Server** | All processing in-browser using `FileReader` & `ArrayBuffer` |
+| **Privacy-Focused** | Files never leave your device |
+| **Fast & Efficient** | Optimized with `pdf-lib` stream compression |
+| **Error Handling** | Graceful fallbacks for corrupt/encrypted/large files |
+| **Browser Support** | Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ |
+
+---
 
 ## How to Use
 
 ### Quick Start
 
-1. **Open the application**: Simply open `index.html` in a modern web browser
-2. **Upload a PDF**: Drag and drop a PDF file or click to browse
-3. **Configure options**: Adjust compression level and advanced options
-4. **Compress**: Click the "Compress PDF" button
-5. **Download**: Download your compressed PDF
-
-### Detailed Usage
-
-#### Single File Compression
-
-1. Click on the upload zone or drag and drop a PDF file
-2. Wait for the file to load and preview to appear
-3. Adjust the compression level slider (Low/Medium/High)
-4. (Optional) Configure advanced options:
-   - Remove metadata
-   - Embed fonts (subset)
-   - Grayscale images
-   - Downsample images
-   - Remove duplicate objects
-5. Click "Compress PDF" and wait for processing
-6. Download the compressed file or view size comparison
-
-#### Batch Processing
-
-1. Use the batch file input to select multiple PDF files
-2. Files will be added to the processing queue
-3. Each file will be processed automatically
-4. Download individual files as they complete
-
-### Compression Levels
-
-- **Low**: Minimal size reduction, highest quality (best for archiving)
-- **Medium**: Balanced compression (recommended for most use cases)
-- **High**: Aggressive compression, potential quality loss (best for sharing)
-
-## File Structure
-
-```
-pdf-compressor/
-├── index.html      # Main HTML file with embedded Tailwind CSS
-├── app.js          # JavaScript application logic
-└── README.md       # This file
-```
-
-## Browser Requirements
-
-- Modern browser with ES6+ support
-- JavaScript enabled
-- File API support
-- Canvas API support (for preview)
-
-### Recommended Browsers
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Limitations
-
-### pdf-lib Limitations
-
-The pdf-lib library has some limitations:
-
-1. **Image Compression**: Advanced image manipulation (downsampling, grayscale conversion) requires more complex PDF structure manipulation. The current implementation focuses on PDF structure optimization.
-
-2. **Complex PDFs**: Very complex PDFs with embedded JavaScript or advanced features may not compress as effectively.
-
-3. **Encrypted PDFs**: Password-protected PDFs cannot be processed.
-
-### File Size Limits
-
-- Maximum file size: 50MB (configurable in `app.js`)
-- Very large files may take longer to process
-- Browser memory limits may affect processing of extremely large files
-
-## Customization
-
-### Changing File Size Limit
-
-Edit the `MAX_FILE_SIZE` constant in `app.js`:
-
-```javascript
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-```
-
-### Adjusting Compression Levels
-
-Modify the `COMPRESSION_LEVELS` object in `app.js`:
-
-```javascript
-const COMPRESSION_LEVELS = {
-    1: { name: 'Low', quality: 0.9, compression: 0.1 },
-    2: { name: 'Medium', quality: 0.7, compression: 0.3 },
-    3: { name: 'High', quality: 0.5, compression: 0.5 },
-};
-```
-
-### Theme Customization
-
-The theme colors can be customized in the Tailwind config section of `index.html`:
-
-```javascript
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                primary: {
-                    // Your color palette
-                }
-            }
-        }
-    }
-}
-```
-
-## Security Considerations
-
-- All processing happens client-side - no data is sent to any server
-- Files are processed in memory and not stored permanently
-- No external API calls after initial page load
-- Input validation prevents malicious file uploads
-- No use of `eval()` or other unsafe JavaScript
-
-## Performance Tips
-
-1. **For Best Results**:
-   - Use Medium compression for balanced results
-   - Enable "Remove duplicate objects" for better compression
-   - Enable "Remove metadata" for slight size reduction
-
-2. **For Maximum Compression**:
-   - Use High compression level
-   - Enable all advanced options
-   - Note: May result in quality loss
-
-3. **For Best Quality**:
-   - Use Low compression level
-   - Disable image-related options
-   - Keep metadata if needed
-
-## Troubleshooting
-
-### File Won't Upload
-
-- Check file size (must be under 50MB)
-- Ensure file is a valid PDF
-- Try a different browser
-
-### Compression Fails
-
-- File may be corrupted or encrypted
-- Try a different PDF file
-- Check browser console for error messages
-
-### Preview Not Showing
-
-- Preview uses canvas rendering
-- Some complex PDFs may not render correctly
-- This doesn't affect compression functionality
-
-### Slow Processing
-
-- Large files take longer to process
-- Close other browser tabs to free up memory
-- Use a more powerful device for very large files
-
-## Future Enhancements
-
-Potential improvements for future versions:
-
-- [ ] Integration with pdf.js for better preview rendering
-- [ ] Web Worker support for non-blocking compression
-- [ ] Service Worker for offline functionality
-- [ ] More advanced image compression algorithms
-- [ ] PDF merging functionality
-- [ ] PDF splitting functionality
-- [ ] OCR text extraction
-- [ ] PDF watermarking
-
-## License
-
-This project is open source and available for personal and commercial use.
-
-## Credits
-
-- **pdf-lib**: PDF manipulation library by Hopding
-- **Tailwind CSS**: Utility-first CSS framework
-- **Heroicons**: Beautiful SVG icons
-
-## Support
-
-For issues, questions, or contributions, please refer to the project repository.
+1. Open `index.html` in any modern browser
+2. Drag & drop a PDF or click to upload
+3. Adjust **compression level** and **advanced options**
+4. Click **"Compress PDF"**
+5. Download your optimized file instantly
 
 ---
 
-**Note**: This application processes files entirely in your browser. No data is sent to any server, ensuring maximum privacy and security.
+### Detailed Workflow
 
+#### Single File Compression
+
+1. **Upload** → Drag or click upload zone
+2. **Preview** → See first page + file size + page count
+3. **Configure**:
+   - Compression Level: `Low`, `Medium`, `High`
+   - Advanced Options:
+     - Remove metadata
+     - Subset embedded fonts
+     - Convert images to grayscale
+     - Downsample images to 150 DPI
+     - Remove duplicate objects
+4. **Compress** → Click button → See progress
+5. **Result** → Auto-download + open comparison modal
+
+#### Batch Processing
+
+1. Click **"Add More Files"** in upload zone
+2. Select multiple PDFs
+3. Files are queued and processed one-by-one
+4. Individual **"Download"** buttons appear per file
+
+---
+
+### Compression Levels
+
+| Level | Quality | Size Reduction | Best For |
+|------|--------|----------------|---------|
+| **Low** | High | ~10–20% | Archiving, printing |
+| **Medium** | Good | ~30–50% | **General use (recommended)** |
+| **High** | Fair | ~60–80% | Email, sharing, storage |
+
+---
+
+## File Structure
+
+```bash
+pdf-compressor/
+├── index.html      # Main page with Tailwind & logic
+├── app.js          # All JavaScript (modular, commented)
+└── README.md       # This file
